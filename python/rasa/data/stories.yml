@@ -1,0 +1,29 @@
+version: "3.1"
+
+stories:
+
+- story: opening hours
+  steps:
+    - intent: greet
+    - action: utter_greet
+    - action: utter_choices
+    - intent: opening_hours
+    - action: action_display_opening_hours
+
+- story: menu
+  steps:
+    - intent: greet
+    - action: utter_greet
+    - action: utter_choices
+    - intent: menu
+    - action: action_display_menu
+
+- story: order
+  steps:
+    - intent: greet
+    - action: utter_greet
+    - action: utter_choices
+    - intent: order_food
+    - action: utter_menu
+    - action: utter_wait_for_order
+

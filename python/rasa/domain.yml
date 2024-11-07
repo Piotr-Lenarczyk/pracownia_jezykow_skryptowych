@@ -1,0 +1,55 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - bot_challenge
+  #- ask_intent
+  - opening_hours
+  - menu
+  - order_food
+
+responses:
+  utter_greet:
+  - text: "Hello! Welcome to the restaurant automatic assistant. What would you like to do?"
+
+  utter_goodbye:
+  - text: "Bye"
+
+  utter_iamabot:
+  - text: "I am a bot, powered by Rasa."
+
+  utter_choices:
+  - text: |
+      You can choose to:
+      1) Ask for opening hours
+      2) Ask for menu
+      3) Place an order
+
+  utter_menu:
+    - text: |
+        Here is the restaurant menu:
+        - Bruschetta - 18 PLN
+        - Camembert cheese - 34 PLN
+        - Tuna salad - 40 PLN
+        - Salad with shrimps - 47 PLN
+        - Margherita - 36 PLN
+        - Hawaii - 32 PLN
+        - Hot Meat pizza - 46 PLN
+        - Spaghetti Carbonara - 40 PLN
+        - Lasagna - 42 PLN
+        - Risotto - 43 PLN
+
+  utter_wait_for_order:
+    - text: "What would you like to order?"
+
+  utter_out_of_scope:
+    - text: "I'm sorry, I couldn't understand your request. Here's what you can do:"
+
+actions:
+  - action_display_opening_hours
+  - action_display_menu
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

@@ -1,0 +1,286 @@
+{
+  "items": [
+    {
+      "name": "Bruschetta",
+      "price": 18,
+      "preparation_time": 0.1,
+      "ingredients": [
+        {
+          "name": "bread",
+          "cost": 4
+        },
+        {
+          "name": "garlic butter",
+          "cost": 8
+        },
+        {
+          "name": "mozzarella",
+          "cost": 6
+        }
+      ]
+    },
+    {
+      "name": "Camembert cheese",
+      "price": 34,
+      "preparation_time": 0.35,
+      "ingredients": [
+        {
+          "name": "camembert",
+          "cost": 15
+        },
+        {
+          "name": "walnuts",
+          "cost": 5
+        },
+        {
+          "name": "cherry tomatoes",
+          "cost": 4
+        },
+        {
+          "name": "balsamic sauce",
+          "cost": 3
+        },
+        {
+          "name": "focaccia",
+          "cost": 7
+        }
+      ]
+    },
+    {
+      "name": "Tuna salad",
+      "price": 40,
+      "preparation_time": 0.2,
+      "ingredients": [
+        {
+          "name": "salad",
+          "cost": 5
+        },
+        {
+          "name": "tuna",
+          "cost": 10
+        },
+        {
+          "name": "olive oil",
+          "cost": 2
+        },
+        {
+          "name": "eggs",
+          "cost": 4
+        },
+        {
+          "name": "red onion",
+          "cost": 5
+        },
+        {
+          "name": "cucumber",
+          "cost": 3
+        },
+        {
+          "name": "cherry tomatoes",
+          "cost": 4
+        },
+        {
+          "name": "grissini",
+          "cost": 7
+        }
+      ]
+    },
+    {
+      "name": "Salad with shrimps",
+      "price": 47,
+      "preparation_time": 0.2,
+      "ingredients": [
+        {
+          "name": "salad",
+          "cost": 5
+        },
+        {
+          "name": "shrimps",
+          "cost": 15
+        },
+        {
+          "name": "olive oil",
+          "cost": 2
+        },
+        {
+          "name": "garlic butter",
+          "cost": 8
+        },
+        {
+          "name": "olives",
+          "cost": 7
+        },
+        {
+          "name": "cherry tomatoes",
+          "cost": 4
+        },
+        {
+          "name": "mozzarella",
+          "cost": 6
+        }
+      ]
+    },
+    {
+      "name": "Pizza margarita",
+      "price": 36,
+      "preparation_time": 0.4,
+      "ingredients": [
+        {
+          "name": "mozzarella",
+          "cost": 6
+        },
+        {
+          "name": "garlic sauce",
+          "cost": 4
+        },
+        {
+          "name": "tomato sauce",
+          "cost": 4
+        },
+        {
+          "name": "mayo sauce",
+          "cost": 4
+        },
+        {
+          "name": "balsamic sauce",
+          "cost": 4
+        }
+      ]
+    },
+    {
+      "name": "Pizza hawaii",
+      "price": 32,
+      "preparation_time": 0.4,
+      "ingredients": [
+        {
+          "name": "ham",
+          "cost": 5
+        },
+        {
+          "name": "mushrooms",
+          "cost": 6
+        },
+        {
+          "name": "pineapple",
+          "cost": 3
+        },
+        {
+          "name": "garlic sauce",
+          "cost": 4
+        },
+        {
+          "name": "tomato sauce",
+          "cost": 4
+        },
+        {
+          "name": "mayo sauce",
+          "cost": 4
+        },
+        {
+          "name": "balsamic sauce",
+          "cost": 4
+        }
+      ]
+    },
+    {
+      "name": "Pizza hot meat",
+      "price": 46,
+      "preparation_time": 0.55,
+      "ingredients": [
+        {
+          "name": "ham",
+          "cost": 5
+        },
+        {
+          "name": "bacon",
+          "cost": 6
+        },
+        {
+          "name": "pepperoni",
+          "cost": 8
+        },
+        {
+          "name": "roasted onion",
+          "cost": 6
+        },
+        {
+          "name": "pepper",
+          "cost": 2
+        },
+        {
+          "name": "garlic sauce",
+          "cost": 4
+        },
+        {
+          "name": "tomato sauce",
+          "cost": 4
+        },
+        {
+          "name": "mayo sauce",
+          "cost": 4
+        },
+        {
+          "name": "balsamic sauce",
+          "cost": 4
+        }
+      ]
+    },
+    {
+      "name": "Spaghetti Carbonara",
+      "price": 40,
+      "preparation_time": 0.45,
+      "ingredients": [
+        {
+          "name": "sour cream",
+          "cost": 3
+        },
+        {
+          "name": "bacon",
+          "cost": 6
+        },
+        {
+          "name": "onion",
+          "cost": 3
+        },
+        {
+          "name": "egg yolk",
+          "cost": 2
+        },
+        {
+          "name": "parsley",
+          "cost": 4
+        }
+      ]
+    },
+    {
+      "name": "Lasagna",
+      "price": 42,
+      "preparation_time": 0.6,
+      "ingredients": [
+        {
+          "name": "mozzarella",
+          "cost": 6
+        },
+        {
+          "name": "bolognese sauce",
+          "cost": 5
+        }
+      ]
+    },
+    {
+      "name": "Risotto",
+      "price": 43,
+      "preparation_time": 0.5,
+      "ingredients": [
+        {
+          "name": "mushrooms",
+          "cost": 5
+        },
+        {
+          "name": "parsley",
+          "cost": 3
+        }
+      ]
+    }
+  ]
+}
