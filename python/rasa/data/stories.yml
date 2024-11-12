@@ -2,6 +2,18 @@ version: "3.1"
 
 stories:
 
+- story: opening hours day
+  steps:
+    - intent: greet
+    - action: utter_greet
+    - action: utter_choices
+    - intent: opening_hours_day
+      entities:
+      - day: monday
+    - slot_was_set:
+      - day: monday
+    - action: action_display_opening_hours
+
 - story: opening hours
   steps:
     - intent: greet
@@ -24,6 +36,13 @@ stories:
     - action: utter_greet
     - action: utter_choices
     - intent: order_food
-    - action: utter_menu
-    - action: utter_wait_for_order
+      entities:
+      - meal: lasagna
+      - extras: pasta
+      - exclusions: olives
+    - slot_was_set:
+      - meal
+      - extras
+      - exclusions
+    - action: action_order_food
 

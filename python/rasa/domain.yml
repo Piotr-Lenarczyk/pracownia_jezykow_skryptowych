@@ -6,8 +6,48 @@ intents:
   - bot_challenge
   #- ask_intent
   - opening_hours
+  - opening_hours_day
   - menu
   - order_food
+
+entities:
+  - day
+  - meal
+  - extras
+  - exclusions
+slots:
+  day:
+    type: categorical
+    values:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: day
+  meal:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: meal
+  extras:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: extras
+  exclusions:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: exclusions
 
 responses:
   utter_greet:
@@ -26,29 +66,13 @@ responses:
       2) Ask for menu
       3) Place an order
 
-  utter_menu:
-    - text: |
-        Here is the restaurant menu:
-        - Bruschetta - 18 PLN
-        - Camembert cheese - 34 PLN
-        - Tuna salad - 40 PLN
-        - Salad with shrimps - 47 PLN
-        - Margherita - 36 PLN
-        - Hawaii - 32 PLN
-        - Hot Meat pizza - 46 PLN
-        - Spaghetti Carbonara - 40 PLN
-        - Lasagna - 42 PLN
-        - Risotto - 43 PLN
-
-  utter_wait_for_order:
-    - text: "What would you like to order?"
-
   utter_out_of_scope:
     - text: "I'm sorry, I couldn't understand your request. Here's what you can do:"
 
 actions:
   - action_display_opening_hours
   - action_display_menu
+  - action_order_food
 
 session_config:
   session_expiration_time: 60

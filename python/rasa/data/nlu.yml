@@ -90,23 +90,101 @@ nlu:
     - am I talking to a bot?
     - am I talking to a human?
 
+- intent: opening_hours_day
+  examples: |
+    - is the restaurant open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is a restaurant open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is it open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the restrant open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the resturant open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the restarant open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the rest aurant open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the restaurannt open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the erstaurant open on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the restaurant oen on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the restaurant opeen on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the restaurant ope n on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the restaurant opne on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - is the restaurant okpen on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the opening hours on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the openiing hours on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the openi ng hours on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the opning hours on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the opeinng hours on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the okpening hours on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the opening hurs on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the opening houurs on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+    - what are the opening ohurs on [monday|tuesday|wednesday|thursday|friday|saturday|sunday](day)?
+
 - intent: opening_hours
   examples: |
     - is the restaurant open?
+    - is a restaurant open?
+    - is it open?
+    - open?
+    - is open?
+    - is the restrant open?
+    - is the resturant open?
+    - is the restarant open?
+    - is the rest aurant open?
+    - is the restaurannt open?
+    - is the erstaurant open?
+    - is the restaurant oen?
+    - is the restaurant opeen?
+    - is the restaurant ope n?
+    - is the restaurant opne?
+    - is the restaurant okpen?
     - what are the opening hours?
+    - what are the openiing hours?
+    - what are the openi ng hours?
+    - what are the opning hours?
+    - what are the opeinng hours?
+    - what are the okpening hours?
+    - what are the opening hurs?
+    - what are the opening houurs?
+    - what are the opening ohurs?
     - when can I place an order?
 
 - intent: menu
   examples: |
     - show me the menu
+    - show me the mnu
+    - show me the menuu
+    - show me the m enu
+    - show me the mneu
+    - shw me the menu
+    - sshow me the menu
+    - sho w me the menu
+    - menu?
     - what meals are available?
+    - wat meals are available?
+    - whaat meals are available?
+    - w hat meals are available?
+    - whta meals are available?
+    - what meal are available?
+    - what maels are available?
+    - what mea ls are available?
+    - what meala are available?
+    - what available?
+    - what meals are availble?
+    - what meals are avai lable?
+    - what meals are availablle?
+    - what meals are availabel?
     - what type of cuisine is it?
+    - what cuisine?
 
 - intent: order_food
   examples: |
-    - I would like to order
-    - Do you have something else?
-    - I'll have a
+    - I would like to order [lasagna](meal)
+    - I would like to order [lasagna](meal), no [olives](exclusions)
+    - I would like to order [lasagna](meal), extra [pasta](extras)
+    - I would like to order [lasagna](meal), no [olives](exclusions) extra [pasta](extras)
+    - I'll have a [lasagna](meal)
+    - I'll have a [lasagna](meal), no [olives](exclusions)
+    - I'll have a [lasagna](meal), extra [pasta](extras)
+    - I'll have a [lasagna](meal), no [olives](exclusions) extra [pasta](extras)
 
 - intent: out_of_scope
   examples: |
