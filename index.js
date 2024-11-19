@@ -2,19 +2,18 @@ import express from 'express'
 import axios from 'axios'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
-import multer from 'multer'
-import path from 'path'
 import cors from 'cors'
 
 export const app = express()
+const port = 9000
 
 app.use(express.json())
 
 // app.use(cors)
 
-app.listen(8000, (error) => {
+app.listen(port, (error) => {
     if (!error) {
-        console.log("REST API on http://localhost:8000")
+        console.log(`REST API on http://localhost:${port}`)
     } else {
         console.log("Error: " + error)
     }
@@ -24,7 +23,6 @@ app.get('/', function (req, res) {
     res.send("Hello World!")
 })
 
-//axios.create({});
 // Connection to MongoDB
 mongoose.connect('mongodb+srv://admin:dLVOCV0b3qIPBc3m@cluster0.xnoar.mongodb.net/eshop')
     .then(() => {
@@ -34,25 +32,8 @@ mongoose.connect('mongodb+srv://admin:dLVOCV0b3qIPBc3m@cluster0.xnoar.mongodb.ne
         console.error('Error connecting to the database:', err);
     })
 
-// File storage
- const storage = multer.diskStorage({
-     destination: './upload/images',
-     filename: (req, file, callback) => {
-         return callback(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
-     }
- })
 
- const upload = multer({storage: storage})
-
- app.use('/images', express.static('upload/images'))
-
- app.post("/upload", upload.single('product'), (req, res) => {
-     res.json({
-         success: true,
-         imageUrl: `http://localhost:8000/images/${req.file.filename}`
-     })
- })
-
+// Model definition
 const Category = mongoose.model('Category', {
     name: {
         type: String,
@@ -88,16 +69,16 @@ const Product = mongoose.model('Product', {
     }
 })
 
+// API endpoints
+
 app.get('/categories', async function (req, res) {
     let categories = await Category.find({});
-    console.log(categories)
     res.send(categories)
 })
 
 app.get('/categories/:id', async function (req, res) {
     try {
         let category = await Category.findById(req.params.id);
-        console.log(category)
         res.send(category)
     } catch (error) {
         console.log(error)
@@ -108,8 +89,6 @@ app.post('/categories', async function (req, res) {
     const category = new Category({
         name: req.body.name
     });
-    console.log(res.statusCode)
-    console.log(category);
     await category.save();
     res.json({
         statusCode: res.statusCode,
@@ -120,7 +99,6 @@ app.post('/categories', async function (req, res) {
 app.patch('/categories/:id', async function (req, res) {
     try {
         let category = await Category.findByIdAndUpdate(req.params.id, req.body, {new: true});
-        console.log(category)
         res.send(category)
     } catch (error) {
         console.log(error);
@@ -130,10 +108,9 @@ app.patch('/categories/:id', async function (req, res) {
 app.delete('/categories/:id', async function (req, res) {
     try {
         let category = await Category.findByIdAndDelete(req.params.id);
-        console.log(category)
         res.json({
             statusCode: res.statusCode,
-            caegory: category
+            category: category
         })
     } catch (error) {
         console.log(error);
@@ -142,7 +119,6 @@ app.delete('/categories/:id', async function (req, res) {
 
 app.get('/products', async function (req, res) {
     let products = await Product.find({});
-    console.log(products)
     res.send(products);
 })
 
@@ -150,7 +126,6 @@ app.get('/products', async function (req, res) {
 app.get('/products/:id', async function (req, res) {
     try {
         let product = await Product.findById(req.params.id);
-        console.log(product)
         res.send(product)
     } catch (error) {
         console.log(error);
@@ -178,8 +153,6 @@ app.post('/products', async function (req, res) {
         new_price: req.body.new_price,
         old_price: req.body.old_price,
     });
-    console.log(res.statusCode)
-    console.log(product);
     await product.save();
     res.json({
         statusCode: res.statusCode,
@@ -216,7 +189,6 @@ app.patch('/products/:id', async function (req, res) {
         }, {
             new: true
         });
-        console.log(product)
         res.send(product)
     } catch (error) {
         console.log(error);
@@ -226,7 +198,6 @@ app.patch('/products/:id', async function (req, res) {
 app.delete('/products/:id', async function (req, res) {
     try {
         let product = await Product.findByIdAndDelete(req.params.id);
-        console.log(product)
         res.json({
             statusCode: res.statusCode,
             product: product
@@ -235,3 +206,156 @@ app.delete('/products/:id', async function (req, res) {
         console.log(error);
     }
 })
+
+// API testing
+
+const tester = axios.create({
+    baseURL: `http://localhost:${port}`,
+    timeout: 5000
+})
+
+tester.get('/categories')
+    .then(function (response) {
+        console.log("GET all categories")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.get('/products')
+    .then(function (response) {
+        console.log("GET all products")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.get('/categories', {
+        params: {
+            id: '67373c504ab9dc44d74bdf88'
+        }
+    })
+    .then(function (response) {
+        console.log("GET single category")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.get('/products', {
+    params: {
+        id: '673c53dc3651ff40fb2490de'
+    }
+})
+    .then(function (response) {
+        console.log("GET single product")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.post('/categories', {
+    name: 'ProductX'
+})
+    .then(function (response) {
+        console.log("POST category")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.post('/products', {
+    name: 'ProductX',
+    category: {
+        name: 'CategoryX'
+    },
+    old_price: 10,
+    new_price: 8
+})
+    .then(function (response) {
+        console.log("POST product")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.patch('/categories/673c53dc3651ff40fb2490de', {
+    name: 'Category_Test'
+})
+    .then(function (response) {
+        console.log("PATCH category")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.patch('/products/673b321435b470a4bd37793a', {
+    name: 'ProductX',
+    category: {
+        name: 'CategoryX'
+    },
+    old_price: 11,
+    new_price: 7
+})
+    .then(function (response) {
+        console.log("PATCH product")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.delete('/categories/673c70fc9d6d26dea1475fc4')
+    .then(function (response) {
+        console.log("DELETE category")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+tester.delete('/products/673c70fd9d6d26dea1475fd5')
+    .then(function (response) {
+        console.log("DELETE product")
+        console.log(response.data)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
