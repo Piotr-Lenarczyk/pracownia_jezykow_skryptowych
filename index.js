@@ -11,6 +11,13 @@ app.use(express.json())
 
 // app.use(cors)
 
+function sleep(miliseconds) {
+    let currentTime = new Date().getTime();
+    while (currentTime + miliseconds >= new Date().getTime()) {
+
+    }
+}
+
 app.listen(port, (error) => {
     if (!error) {
         console.log(`REST API on http://localhost:${port}`)
@@ -20,7 +27,7 @@ app.listen(port, (error) => {
 })
 
 app.get('/', function (req, res) {
-    res.send("Hello World!")
+    res.json({message: "Hello World!"})
 })
 
 // Connection to MongoDB
@@ -51,11 +58,7 @@ const Product = mongoose.model('Product', {
         ref: 'Category',
         required: true
     },
-    new_price: {
-        type: Number,
-        required: true
-    },
-    old_price: {
+    price: {
         type: Number,
         required: true
     },
@@ -67,6 +70,19 @@ const Product = mongoose.model('Product', {
         type: Boolean,
         default: true
     }
+})
+
+const Basket = mongoose.model('Basket', {
+    products: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        }
+    ],
+    totalPrice: {
+        type: Number,
+        default: 0
+    },
 })
 
 // API endpoints
@@ -150,8 +166,7 @@ app.post('/products', async function (req, res) {
     const product = new Product({
         name: req.body.name,
         category: category,
-        new_price: req.body.new_price,
-        old_price: req.body.old_price,
+        price: req.body.price
     });
     await product.save();
     res.json({
@@ -174,7 +189,7 @@ app.patch('/products/:id', async function (req, res) {
         }
     } catch (error) {
         if (error instanceof TypeError) {
-            console.log(error)
+
         } else {
             res.status(400).send({})
             return
@@ -184,8 +199,7 @@ app.patch('/products/:id', async function (req, res) {
         let product = await Product.findByIdAndUpdate(req.params.id, {
             name: req.body.name,
             category: category,
-            new_price: req.body.new_price,
-            old_price: req.body.old_price,
+            price: req.body.price,
         }, {
             new: true
         });
@@ -207,6 +221,82 @@ app.delete('/products/:id', async function (req, res) {
     }
 })
 
+app.get('/baskets', async function (req, res) {
+    let baskets = await Basket.find({});
+    res.send(baskets)
+})
+
+app.get('/baskets/:id', async function (req, res) {
+    try {
+        let basket = await Basket.findById(req.params.id);
+        res.send(basket)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+app.post('/baskets', async function (req, res) {
+    const basket = new Basket({
+    })
+    await basket.save()
+    res.json(basket)
+})
+
+app.post('/baskets/:id/add', async function (req, res) {
+    try {
+        let product = await Product.findById(req.body.id);
+        let basket = await Basket.findById(req.params.id);
+        let price = product.price
+        basket.products.push(product)
+        basket.totalPrice += price
+        basket.save()
+        res.json(basket)
+    } catch (error) {
+        if (error.stack.includes("CastError: Cast to ObjectId failed for value")) {
+            if (error.message.includes("Basket")) {
+                res.status(400)
+                res.json({
+                    message: "No basket with provided ID found"
+                })
+                return
+            } else if (error.message.includes("Product")) {
+                res.status(400)
+                res.json({
+                    message: "No basket with provided ID found"
+                })
+            }
+        }
+        console.log(error)
+    }
+})
+
+app.delete('/baskets/:id', async function (req, res) {
+    try {
+        let basket = await Basket.findByIdAndDelete(req.params.id);
+        res.json({
+            statusCode: res.statusCode,
+            basket: basket
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.delete('/baskets/:id/submit', async function (req, res) {
+    console.log("Validating data...")
+    try {
+        let basket = await Basket.findByIdAndDelete(req.params.id);
+        console.log("Waiting for payment confirmation...")
+        sleep(5000)
+        res.json({
+            statusCode: res.statusCode,
+            basket: basket
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 // API testing
 
 const tester = axios.create({
@@ -214,38 +304,37 @@ const tester = axios.create({
     timeout: 5000
 })
 
-tester.get('/categories')
+let testCategoryId
+let testProductId
+let testBasketId
+
+await tester.get('/categories')
     .then(function (response) {
-        console.log("GET all categories")
-        console.log(response.data)
-    })
-    .catch(function (error) {
-        console.log(error)
-    })
-    .finally(function () {
-
-    })
-
-tester.get('/products')
-    .then(function (response) {
-        console.log("GET all products")
-        console.log(response.data)
-    })
-    .catch(function (error) {
-        console.log(error)
-    })
-    .finally(function () {
-
-    })
-
-tester.get('/categories', {
-        params: {
-            id: '67373c504ab9dc44d74bdf88'
+        console.log("Running automatic tests with axios...")
+        console.log("--- CATEGORIES ---")
+        if (response.status === 200) {
+            console.log("GET all categories OK")
+        } else {
+            console.log("GET all categories FAIL")
         }
     })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.post('/categories', {
+    name: 'Category-Test'
+    })
     .then(function (response) {
-        console.log("GET single category")
-        console.log(response.data)
+        if (response.status === 200) {
+            console.log("POST category OK")
+        } else {
+            console.log("POST category FAIL")
+        }
+        testCategoryId = new mongoose.Types.ObjectId(response.data.category._id)
     })
     .catch(function (error) {
         console.log(error)
@@ -254,14 +343,13 @@ tester.get('/categories', {
 
     })
 
-tester.get('/products', {
-    params: {
-        id: '673c53dc3651ff40fb2490de'
-    }
-})
+await tester.get(`/categories/${testCategoryId}`)
     .then(function (response) {
-        console.log("GET single product")
-        console.log(response.data)
+        if (response.status === 200) {
+            console.log("GET category OK")
+        } else {
+            console.log("GET category FAIL")
+        }
     })
     .catch(function (error) {
         console.log(error)
@@ -270,45 +358,15 @@ tester.get('/products', {
 
     })
 
-tester.post('/categories', {
-    name: 'ProductX'
-})
-    .then(function (response) {
-        console.log("POST category")
-        console.log(response.data)
-    })
-    .catch(function (error) {
-        console.log(error)
-    })
-    .finally(function () {
-
-    })
-
-tester.post('/products', {
-    name: 'ProductX',
-    category: {
-        name: 'CategoryX'
-    },
-    old_price: 10,
-    new_price: 8
-})
-    .then(function (response) {
-        console.log("POST product")
-        console.log(response.data)
-    })
-    .catch(function (error) {
-        console.log(error)
-    })
-    .finally(function () {
-
-    })
-
-tester.patch('/categories/673c53dc3651ff40fb2490de', {
+await tester.patch(`/categories/${testCategoryId}`, {
     name: 'Category_Test'
-})
+    })
     .then(function (response) {
-        console.log("PATCH category")
-        console.log(response.data)
+        if (response.status === 200) {
+            console.log("PATCH category OK")
+        } else {
+            console.log("PATCH category FAIL")
+        }
     })
     .catch(function (error) {
         console.log(error)
@@ -317,17 +375,125 @@ tester.patch('/categories/673c53dc3651ff40fb2490de', {
 
     })
 
-tester.patch('/products/673b321435b470a4bd37793a', {
+await tester.delete(`/categories/${testCategoryId}`)
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("DELETE category OK")
+        } else {
+            console.log("DELETE category FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.get('/products')
+    .then(function (response) {
+        console.log("--- PRODUCTS ---")
+        if (response.status === 200) {
+            console.log("GET all products OK")
+        } else {
+            console.log("GET all products FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+// Category already exists in the database
+await tester.post('/products', {
     name: 'ProductX',
     category: {
-        name: 'CategoryX'
+        name: 'category'
     },
-    old_price: 11,
-    new_price: 7
+    price: 8
+    })
+    .then(function (response) {
+        console.log("--- Case: Category already exists ---")
+        if (response.status === 200) {
+            console.log("POST product OK")
+        } else {
+            console.log("POST product FAIL")
+        }
+        testProductId = new mongoose.Types.ObjectId(response.data.product._id)
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.get(`/products/${testProductId}`)
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("GET product OK")
+        } else {
+            console.log("GET product FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.patch(`/products/${testProductId}`, {
+    name: 'ProductY'
+    })
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("PATCH product OK")
+        } else {
+            console.log("PATCH product FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.delete(`/products/${testProductId}`)
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("DELETE product OK")
+        } else {
+            console.log("DELETE product FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+// Category does not exist in the database
+await tester.post('/products', {
+    name: 'ProductX',
+    category: {
+        name: 'category_new'
+    },
+    price: 8
 })
     .then(function (response) {
-        console.log("PATCH product")
-        console.log(response.data)
+        console.log("--- Case: Category does not exist ---")
+        if (response.status === 200) {
+            console.log("POST product OK")
+        } else {
+            console.log("POST product FAIL")
+        }
+        testProductId = new mongoose.Types.ObjectId(response.data.product._id)
+        testCategoryId = new mongoose.Types.ObjectId(response.data.product.category._id)
     })
     .catch(function (error) {
         console.log(error)
@@ -336,10 +502,13 @@ tester.patch('/products/673b321435b470a4bd37793a', {
 
     })
 
-tester.delete('/categories/673c70fc9d6d26dea1475fc4')
+await tester.get(`/products/${testProductId}`)
     .then(function (response) {
-        console.log("DELETE category")
-        console.log(response.data)
+        if (response.status === 200) {
+            console.log("GET product OK")
+        } else {
+            console.log("GET product FAIL")
+        }
     })
     .catch(function (error) {
         console.log(error)
@@ -348,10 +517,45 @@ tester.delete('/categories/673c70fc9d6d26dea1475fc4')
 
     })
 
-tester.delete('/products/673c70fd9d6d26dea1475fd5')
+await tester.patch(`/products/${testProductId}`, {
+    name: 'ProductY'
+})
     .then(function (response) {
-        console.log("DELETE product")
-        console.log(response.data)
+        if (response.status === 200) {
+            console.log("PATCH product OK")
+        } else {
+            console.log("PATCH product FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.delete(`/products/${testProductId}`)
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("DELETE product OK")
+        } else {
+            console.log("DELETE product FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.delete(`/categories/${testCategoryId}`)
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("DELETE category OK")
+        } else {
+            console.log("DELETE category FAIL")
+        }
     })
     .catch(function (error) {
         console.log(error)
