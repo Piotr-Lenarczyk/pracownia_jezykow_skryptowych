@@ -301,12 +301,13 @@ app.delete('/baskets/:id/submit', async function (req, res) {
 
 const tester = axios.create({
     baseURL: `http://localhost:${port}`,
-    timeout: 5000
+    timeout: 10000
 })
 
 let testCategoryId
 let testProductId
 let testBasketId
+let basketProducts
 
 await tester.get('/categories')
     .then(function (response) {
@@ -331,10 +332,10 @@ await tester.post('/categories', {
     .then(function (response) {
         if (response.status === 200) {
             console.log("POST category OK")
+            testCategoryId = new mongoose.Types.ObjectId(response.data.category._id)
         } else {
             console.log("POST category FAIL")
         }
-        testCategoryId = new mongoose.Types.ObjectId(response.data.category._id)
     })
     .catch(function (error) {
         console.log(error)
@@ -398,6 +399,7 @@ await tester.get('/products')
         } else {
             console.log("GET all products FAIL")
         }
+        basketProducts = response.data
     })
     .catch(function (error) {
         console.log(error)
@@ -418,10 +420,10 @@ await tester.post('/products', {
         console.log("--- Case: Category already exists ---")
         if (response.status === 200) {
             console.log("POST product OK")
+            testProductId = new mongoose.Types.ObjectId(response.data.product._id)
         } else {
             console.log("POST product FAIL")
         }
-        testProductId = new mongoose.Types.ObjectId(response.data.product._id)
     })
     .catch(function (error) {
         console.log(error)
@@ -489,11 +491,11 @@ await tester.post('/products', {
         console.log("--- Case: Category does not exist ---")
         if (response.status === 200) {
             console.log("POST product OK")
+            testProductId = new mongoose.Types.ObjectId(response.data.product._id)
+            testCategoryId = new mongoose.Types.ObjectId(response.data.product.category._id)
         } else {
             console.log("POST product FAIL")
         }
-        testProductId = new mongoose.Types.ObjectId(response.data.product._id)
-        testCategoryId = new mongoose.Types.ObjectId(response.data.product.category._id)
     })
     .catch(function (error) {
         console.log(error)
@@ -555,6 +557,120 @@ await tester.delete(`/categories/${testCategoryId}`)
             console.log("DELETE category OK")
         } else {
             console.log("DELETE category FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.get('/baskets')
+    .then(function (response) {
+        console.log("--- BASKETS ---")
+        if (response.status === 200) {
+            console.log("GET all baskets OK")
+        } else {
+            console.log("GET all baskets FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.post('/baskets', {})
+    .then(function (response) {
+        console.log("--- Case: Ordering products ---")
+        if (response.status === 200) {
+            console.log("POST basket OK")
+            testBasketId = new mongoose.Types.ObjectId(response.data._id)
+        } else {
+            console.log("POST basket FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.post(`/baskets/${testBasketId}/add`, {
+    id: basketProducts["0"]._id
+})
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("POST addProduct OK")
+        } else {
+            console.log("POST addProduct FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.post(`/baskets/${testBasketId}/add`, {
+    id: basketProducts["1"]._id
+})
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("POST addProduct OK")
+        } else {
+            console.log("POST addProduct FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.post(`/baskets/${testBasketId}/add`, {
+    id: basketProducts["2"]._id
+})
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("POST addProduct OK")
+        } else {
+            console.log("POST addProduct FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.get(`/baskets/${testBasketId}`)
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("GET basket OK")
+        } else {
+            console.log("GET basket FAIL")
+        }
+    })
+    .catch(function (error) {
+        console.log(error)
+    })
+    .finally(function () {
+
+    })
+
+await tester.delete(`/baskets/${testBasketId}/submit`)
+    .then(function (response) {
+        if (response.status === 200) {
+            console.log("DELETE basket OK")
+        } else {
+            console.log("DELETE basket FAIL")
         }
     })
     .catch(function (error) {
