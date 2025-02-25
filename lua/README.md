@@ -12,20 +12,20 @@ This program assumes that:
 - There is a <i>mydatabase</i> schema created in the database
 - There is a <i>myuser</i> user, authenticated by <i>mypassword</i> password
 - There are <i>categories</i> and <i>products</i> tables defined in the database, which, in order to comply with design, can be defined as:
-<code>
+```
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL
 );
-</code>
-<code>
+```
+```
 CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
-</code>
+```
 Alternatively, this configuration can altered in <b>config.lua</b>.
 
 ## Endpoints
