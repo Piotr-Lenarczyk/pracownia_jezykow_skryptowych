@@ -17,11 +17,21 @@ Before running this project, ensure you have the following installed:
 
 ## Installation
 1. Clone the repository
-2. Install dependencies: <code>npm install</code>
+2. Install dependencies:
+```
+npm install
+```
 3. Set up MongoDB connection:
     - If using a cloud-hosted database (e.g., MongoDB Atlas), replace the connection string inside <i>mongoose.connect</i> in <b>server.js</b> with your credentials.
     - If running MongoDB locally, ensure your MongoDB service is up and update the connection URL accordingly.
-4. Start the server: <code>npm start</code><br>The API will be available at <code>http://localhost:9000</code>
+4. Start the server:
+```
+npm start
+```
+The API will be available at
+```
+http://localhost:9000
+```
 
 ## API Endpoints
 
